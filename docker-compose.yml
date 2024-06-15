@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  benmoreapp:
+    build: .
+    image: app:benmore
+    container_name: benmore_container
+    command: sh -c "python manage.py migrate && 
+                    gunicorn benmore.wsgi:application --workers 8 --threads 8 -t 120 --bind 0.0.0.0:8000"
+    restart: always
+    ports:
+      - "8002:8000"
+    env_file:
+      - .env
+    depends_on:
+      - benmoredb
+    volumes:
+      - .:/benmore
+
+  # benmoredb:
+  #   image: postgres:14-alpine
+  #   restart: always
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   ports:
+  #     - '5438:5432'
+  #   environment:
+  #     - POSTGRES_DB=${DB_NAME}
+  #     - POSTGRES_USER=${DB_USER}
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #   container_name: benmoredb
+
+volumes:
+  # pgdata:
+
+networks:
+  djangonetwork:
+    driver: bridge
