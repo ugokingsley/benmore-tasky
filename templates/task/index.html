@@ -21,8 +21,9 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <div class="p-4 md:p-5">
-                <form class="space-y-4" action="#">
+            <div class="p-4 md:p-5" id="form-wrapper">
+                <form method="POST" id="form" class="space-y-4">
+                    {% csrf_token %}
                     <div>
                         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Title</label>
@@ -61,6 +62,23 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required />
                     </div>
+                    <!-- <div>
+                        <label for="assigned_to" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Assigned To</label>
+                        <input type="text" name="assigned_to" id="assigned_to"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            required />
+                    </div> -->
+
+                    <label for="assigned_to" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Assigned to</label>
+                    <select id="assigned_to" name="priority" required
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Choose an option</option>
+                        {% for obj in all_users %}
+                        <option value={{obj.id}}>{{obj.email}}</option>
+                        {% endfor %}
+                    </select>
 
                     <div>
                         <label for="due_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -78,12 +96,91 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var form = document.getElementById('form-wrapper')
+    form.addEventListener('submit', function (e) {
+        e.preventDefault()
+        console.log('Form submitted')
+        var url = 'http://localhost:5000/api/v1/tasks/'
+        // if (activeItem != null){
+        // 	var url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`
+        // 	activeItem = null
+        // }
+
+        var csrftoken = getCookie('csrftoken');
+
+        var title = document.getElementById('title').value
+        var description = document.getElementById('description').value
+        var status = document.getElementById('status').value
+        var priority = document.getElementById('priority').value
+        var due_date = document.getElementById('due_date').value
+        var category = document.getElementById('category').value
+        var assigned_to = document.getElementById('assigned_to').value
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'title': title,
+                'description': description,
+                'status': status,
+                'priority': priority,
+                'due_date': due_date,
+                'category': category,
+                'assigned_to': 1
+            })
+        }
+        ).then(function (response) {
+            // buildList()
+            document.getElementById('form').reset()
+        })
+    })
+
+    function deleteItem(item) {
+        console.log('Delete clicked')
+        fetch(`http://localhost:5000/api/v1/tasks/${item.id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            }
+        }).then((response) => {
+            buildList()
+        })
+    }
+
+</script>
 {% endblock modal %}
 
 {% block content %}
 <br /><br />
-<div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-    <div class="grid grid-cols-3 gap-4 mb-4">
+
+<!-- <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14"> -->
+<div class="container mx-auto">
+    <!-- <div class="grid grid-cols-3 gap-4 mb-4"> -->
+    <div class="grid grid-cols-3 gap-1">
+
+        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3 lg:col-span-3 xl:col-span-3 2xl:col-span-3"> -->
         <div id="in_progress"
             class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800 ">
 
@@ -100,21 +197,25 @@
                                     // var temp = "<p>" + response[key].title + "</p>";
                                     var temp = `
                                     <div
-                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                class="my-1 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="flex justify-end px-4 pt-4">
 
                 </div>
 
-                <div class="flex flex-col items-center pb-10">
+                <div class="flex flex-col items-center pb-10 px-2">
                     <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
                     </h5>
                     <span class="text-sm text-gray-500 dark:text-gray-400"></span>
                     <div class="flex mt-4 md:mt-6">
                         <a href="#"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
-                            friend</a>
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-eye"></i>
+                            </a>&nbsp
                         <a href="#"
-                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium  text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-trash"></i>
+                            </a>&nbsp
+                        <a href="#"
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-regular fa-pen-to-square"></i>
+                            </a>
                     </div>
                 </div>
             </div>
@@ -125,15 +226,16 @@
                             error: function (response) {
                                 console.log("an error occured")
                             }
-                        })
-                    })
-                })
+                        });
+                    }, 1000);
+                });
             </script>
         </div>
+        <!-- </div> -->
 
 
-
-        <!-- <div id="completed" class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3 lg:col-span-3 xl:col-span-3 2xl:col-span-3"> -->
+        <div id="completed" class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
 
             <script>
                 $(document).ready(function () {
@@ -158,48 +260,83 @@
                     <span class="text-sm text-gray-500 dark:text-gray-400"></span>
                     <div class="flex mt-4 md:mt-6">
                         <a href="#"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
-                            friend</a>
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-eye"></i>
+                            </a>&nbsp
                         <a href="#"
-                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium  text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-trash"></i>
+                            </a>&nbsp
+                        <a href="#"
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-regular fa-pen-to-square"></i>
+                            </a>
                     </div>
                 </div>
             </div>
                                     `
-                                    $("#in_progress").append(temp);
+                                    $("#completed").append(temp);
                                 }
                             },
                             error: function (response) {
                                 console.log("an error occured")
                             }
                         })
-                    })
+                    }, 1000)
                 })
             </script>
 
+            <!-- </div> -->
         </div>
- -->
 
 
+        <div id="overdue" class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800 ">
 
-        <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-            <div
-                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <script>
+                $(document).ready(function () {
+                    setInterval(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'http://localhost:5000/api/v1/tasks/tasks_overdue/',
+                            success: function (response) {
+                                console.log(response);
+                                $("#overdue").empty();
+                                for (var key in response) {
+                                    // var temp = "<p>" + response[key].title + "</p>";
+                                    var temp = `
+                                    <div
+                class="my-1 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="flex justify-end px-4 pt-4">
+
                 </div>
-                <div class="flex flex-col items-center pb-10">
-                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
+
+                <div class="flex flex-col items-center pb-10 px-2">
+                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
+                    </h5>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
                     <div class="flex mt-4 md:mt-6">
                         <a href="#"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
-                            friend</a>
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-eye"></i>
+                            </a>&nbsp
                         <a href="#"
-                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium  text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-trash"></i>
+                            </a>&nbsp
+                        <a href="#"
+                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-regular fa-pen-to-square"></i>
+                            </a>
                     </div>
                 </div>
             </div>
+                                    `
+                                    $("#overdue").append(temp);
+                                }
+                            },
+                            error: function (response) {
+                                console.log("an error occured")
+                            }
+                        });
+                    }, 1000);
+                });
+            </script>
         </div>
+
     </div>
 </div>
 

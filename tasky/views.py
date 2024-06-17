@@ -22,13 +22,11 @@ from .forms import *
 
 
 def index(request):
-    # task_in_progress = TaskManager.objects.filter(status='In Progress') 
-    # task_completed = TaskManager.objects.filter(status='Completed') 
-    # context = {
-	# 	'task_in_progress': task_in_progress,
-	# 	'task_completed': task_completed,
-	# }
-    return render(request, 'task/index.html')
+    all_users = User.objects.all() 
+    context = {
+		'all_users': all_users,
+	}
+    return render(request, 'task/index.html', context=context)
 
 class TaskManagerViewSet(ModelViewSet):
     """
@@ -94,12 +92,11 @@ class TaskManagerViewSet(ModelViewSet):
         except Exception as e:
             return Response({"message": f"{e}"}, status=status.HTTP_400_BAD_REQUEST) # return error response
 
-    def create_task(self, request):
-        # create a new task object
-        # check to see if data from the serializer is valid before saving 
+    def create(self, request):
         serializer = TaskManagerSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True) # check all fields is valid before attempting to save
-        serializer.save(user=self.request.user)
+        # serializer.save(assigned_to=self.request.user)
+        serializer.save()
         return Response({
             "status": 201,
             "message": ["Task Created Successfully"]},
