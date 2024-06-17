@@ -13,73 +13,40 @@ from django.urls import reverse,reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
 from .forms import *
 
 
 def index(request):
-    return render(request, 'index.html')
+    # task_in_progress = TaskManager.objects.filter(status='In Progress') 
+    # task_completed = TaskManager.objects.filter(status='Completed') 
+    # context = {
+	# 	'task_in_progress': task_in_progress,
+	# 	'task_completed': task_completed,
+	# }
+    return render(request, 'task/index.html')
 
-class TaskCreate(LoginRequiredMixin, CreateView, SuccessMessageMixin):
-	model = TaskManager
-	template_name = 'task/create.html'
-	form_class = TaskForm
-  
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super(TaskCreate, self).form_valid(form)
-
-	def get_success_url(self):
-		messages.success(self.request, 'Your Paper has been Submitted Successfully!! ')
-		return '/' # or whatever url you want to redirect to
-
-class TaskDetail(DetailView):
-    model = TaskManager
-    template_name = 'task/detail.html'
-
-
-class TaskUpdate(LoginRequiredMixin, UpdateView):
-	model = TaskManager
-	template_name = 'task/create.html'
-	form_class = TaskForm
-  
-	def form_valid(self, form):
-		form.instance.user = self.request.user
-		return super(TaskUpdate, self).form_valid(form)
-
-	def get_success_url(self):
-		messages.success(self.request, 'you have successfully updated')
-		return '/' # or whatever url you want to redirect to
-
-
-class TaskDelete(DeleteView):
-    model = TaskManager
-    template_name = 'task/task_confirm_delete.html'
-    
-    def get_success_url(self):
-        messages.success(self.request, 'you have successfully deleted task')
-        return '/' # or whatever url you want to redirect to
-
-
-class TaskManagerViewSet(viewsets.ModelViewSet):
+class TaskManagerViewSet(ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions for task.
     """
     queryset = TaskManager.objects.all()
     serializer_class = TaskManagerSerializer
-    permission_classes = [IsAuthenticated]
-    
-    def list(self, request):
+    # permission_classes = [IsAuthenticated]
+
+    @action(methods=["GET"], detail=False)
+    def tasks_overdue(self, request):
         try:
             # Check to see if task exists for a particular user
             # and display it/them
-            allTasks = TaskManager.objects.filter(user=request.user) 
+            allTasks = TaskManager.objects.filter(status='Overdue')  
             if allTasks.exists():
                 serializer = self.get_serializer(allTasks, many=True)
-                publish('task Listing', serializer.data) # create a socket stream
                 return Response(serializer.data, status=status.HTTP_200_OK) # return task oject response
             else:
                 return Response(
@@ -89,3 +56,89 @@ class TaskManagerViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({"message": f"{e}"}, status=status.HTTP_400_BAD_REQUEST) # return error response
+
+    @action(methods=["GET"], detail=False)
+    def tasks_completed(self, request):
+        try:
+            # Check to see if task exists for a particular user
+            # and display it/them
+            allTasks = TaskManager.objects.filter(status='Completed')  
+            if allTasks.exists():
+                serializer = self.get_serializer(allTasks, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK) # return task oject response
+            else:
+                return Response(
+                    {"message": ["User has no task yet"]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                ) # return error response
+
+        except Exception as e:
+            return Response({"message": f"{e}"}, status=status.HTTP_400_BAD_REQUEST) # return error response
+
+
+    @action(methods=["GET"], detail=False)
+    def tasks_in_progress(self, request):
+        try:
+            # Check to see if task exists for a particular user
+            # and display it/them
+            allTasks = TaskManager.objects.filter(status='In Progress')  
+            if allTasks.exists():
+                serializer = self.get_serializer(allTasks, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK) # return task oject response
+            else:
+                return Response(
+                    {"message": ["User has no task yet"]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                ) # return error response
+
+        except Exception as e:
+            return Response({"message": f"{e}"}, status=status.HTTP_400_BAD_REQUEST) # return error response
+
+    def create_task(self, request):
+        # create a new task object
+        # check to see if data from the serializer is valid before saving 
+        serializer = TaskManagerSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True) # check all fields is valid before attempting to save
+        serializer.save(user=self.request.user)
+        return Response({
+            "status": 201,
+            "message": ["Task Created Successfully"]},
+            status=status.HTTP_201_CREATED,
+            ) # return task oject response
+
+    def retrieve_task(self, request, *args, **kwargs):
+        # retrieve/read task by id created by a particular user 
+        # check if task exists, throw an error is it doesn't
+        try:
+            instance = self.get_object()
+        except Exception as e:
+            return Response({'message':str(e)}, status=status.HTTP_204_NO_CONTENT,) # return error response
+        else:
+            #any additional logic
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK) # return task oject response
+
+    def update_task(self, request, *args, **kwargs):
+        # update task by id created by a particular user 
+        # check if task exists, throw an error is it doesn't
+        try:
+            instance = self.get_object()
+        except Exception as e:
+            return Response({'message':str(e)}, status=status.HTTP_204_NO_CONTENT,) # return error response
+        else:
+            serializer = self.get_serializer(instance)
+            super().update(request, *args, **kwargs)
+            return Response({'message':'Task Updated Successfully'}, status=status.HTTP_200_OK) # return task oject response
+    
+    def destroy_task(self, request, *args, **kwargs):
+        # Delete task by id created by a particular user 
+        # check if task exists, throw an error is it doesn't
+        try:
+            instance = self.get_object()
+        except Exception as e:
+            return Response({'message':str(e)}, status=status.HTTP_204_NO_CONTENT,) # return error response
+        else:
+            serializer = self.get_serializer(instance)
+            instance.delete()
+            publish('Task Deleted Successfully', serializer.data) # create a socket stream
+            return Response({'message':'Task Deleted'}, status=status.HTTP_204_NO_CONTENT) # return task oject response

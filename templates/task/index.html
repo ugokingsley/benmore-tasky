@@ -1,0 +1,207 @@
+{% extends "../_base.html" %}
+
+{% block modal %}
+<div id="authentication-modal" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+
+                <button type="button"
+                    class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    data-modal-hide="authentication-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                <form class="space-y-4" action="#">
+                    <div>
+                        <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Title</label>
+                        <input type="text" name="title" id="title"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            required />
+                    </div>
+                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Description</label>
+                    <textarea id="description" rows="4" name="description" required
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+
+                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                        Status</label>
+                    <select id="status" name="status" required
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Choose an option</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Overdue">Overdue</option>
+                    </select>
+
+                    <label for="priority" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                        Priority</label>
+                    <select id="priority" name="priority" required
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Choose an option</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                    <div>
+                        <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Category</label>
+                        <input type="text" name="category" id="category"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            required />
+                    </div>
+
+                    <div>
+                        <label for="due_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Due Date</label>
+                        <input type="date" name="due_date" id="due_date"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            required />
+                    </div>
+
+
+                    <button type="submit"
+                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal %}
+
+{% block content %}
+<br /><br />
+<div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+    <div class="grid grid-cols-3 gap-4 mb-4">
+        <div id="in_progress"
+            class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800 ">
+
+            <script>
+                $(document).ready(function () {
+                    setInterval(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'http://localhost:5000/api/v1/tasks/tasks_in_progress/',
+                            success: function (response) {
+                                console.log(response);
+                                $("#in_progress").empty();
+                                for (var key in response) {
+                                    // var temp = "<p>" + response[key].title + "</p>";
+                                    var temp = `
+                                    <div
+                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex justify-end px-4 pt-4">
+
+                </div>
+
+                <div class="flex flex-col items-center pb-10">
+                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
+                    </h5>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
+                    <div class="flex mt-4 md:mt-6">
+                        <a href="#"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
+                            friend</a>
+                        <a href="#"
+                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+                    </div>
+                </div>
+            </div>
+                                    `
+                                    $("#in_progress").append(temp);
+                                }
+                            },
+                            error: function (response) {
+                                console.log("an error occured")
+                            }
+                        })
+                    })
+                })
+            </script>
+        </div>
+
+
+
+        <!-- <div id="completed" class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+
+            <script>
+                $(document).ready(function () {
+                    setInterval(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'http://localhost:5000/api/v1/tasks/tasks_completed/',
+                            success: function (response) {
+                                console.log(response);
+                                $("#completed").empty();
+                                for (var key in response) {
+                                    var temp = `
+                                    <div
+                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex justify-end px-4 pt-4">
+
+                </div>
+
+                <div class="flex flex-col items-center pb-10">
+                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
+                    </h5>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
+                    <div class="flex mt-4 md:mt-6">
+                        <a href="#"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
+                            friend</a>
+                        <a href="#"
+                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+                    </div>
+                </div>
+            </div>
+                                    `
+                                    $("#in_progress").append(temp);
+                                }
+                            },
+                            error: function (response) {
+                                console.log("an error occured")
+                            }
+                        })
+                    })
+                })
+            </script>
+
+        </div>
+ -->
+
+
+
+        <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+            <div
+                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex justify-end px-4 pt-4">
+                </div>
+                <div class="flex flex-col items-center pb-10">
+                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
+                    <div class="flex mt-4 md:mt-6">
+                        <a href="#"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
+                            friend</a>
+                        <a href="#"
+                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

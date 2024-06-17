@@ -181,3 +181,9 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_ORIGINS = [
     "http://localhost:8002",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
