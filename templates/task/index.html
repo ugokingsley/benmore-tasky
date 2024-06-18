@@ -191,7 +191,11 @@
                                 for (var key in response) {
                                     // var temp = "<p>" + response[key].title + "</p>";
                                     var temp = `
-
+                                    <span class="my-2">
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].priority}</button>
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].due_date}</button>
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].category}</button>
+                                        </span>
                                     <div class="bg-white rounded shadow max-w-md mx-auto px-4 py-2">
         <header class="p-4">
             <h3 class="text-lg font-bold">${response[key].title}</h3>
@@ -247,6 +251,12 @@
                                 $("#completed").empty();
                                 for (var key in response) {
                                     var temp = `
+                                    <span class="my-2">
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].priority}</button>
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].due_date}</button>
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].category}</button>
+                                        </span>
+
                                     <div class="bg-white rounded shadow max-w-md mx-auto px-4 py-2">
         <header class="p-4">
             <h3 class="text-lg font-bold">${response[key].title}</h3>
@@ -304,6 +314,11 @@
                                 for (var key in response) {
                                     // var temp = "<p>" + response[key].title + "</p>";
                                     var temp = `
+                                    <span class="my-2">
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].priority}</button>
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].due_date}</button>
+                                        <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].category}</button>
+                                        </span>
                                     <div class="bg-white rounded shadow max-w-md mx-auto px-4 py-2">
         <header class="p-4">
             <h3 class="text-lg font-bold">${response[key].title}</h3>
