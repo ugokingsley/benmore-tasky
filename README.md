@@ -1,5 +1,5 @@
 
-﻿# Benmore Project
+**Benmore Tasky App**
 <img width="955" alt="image" src="https://github.com/ugokingsley/benmore-tasky/assets/19801981/68b3a3d5-3a38-45a0-af22-2e4e98b16119">
 Project Description
 
@@ -14,7 +14,9 @@ Project Description
 **3. Installation Instructions**
    - Clone the repo
    - Install python requirements via terminal:
-     **pip install requirements.txt** and  **docker-compose up -d** to run the container and services
-   - Create a .env file in the project root and provide the necessary credential information
-     as seen in env.example file (DB credentials and Cloudampq credentials from **https://www.cloudamqp.com/**)
+     **pip install requirements.txt** and  **npm install -D tailwindcss** to install Tailwind CSS as a dev dependency using NPM
+   - Run the following command to watch for changes and compile the Tailwind CSS code:
+     **npx tailwindcss -i ./static/src/input.css -o ./static/src/output.css --watch**
+   - Run the following command to start django local server in another terminal window:
+     **python manage.py runserver 5000**
   
