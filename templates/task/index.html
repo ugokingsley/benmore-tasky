@@ -176,6 +176,17 @@
 <br /><br />
 <div class="container mx-auto">
     <div class="grid grid-cols-3 gap-2">
+        <button
+            class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">In
+            Proress</button>
+        <button
+            class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">Completed
+        </button>
+        <button
+            class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
+            Overdue</button>
+    </div>
+    <div class="grid grid-cols-3 gap-2">
         <div id="in_progress"
             class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800 ">
 
@@ -191,6 +202,7 @@
                                 for (var key in response) {
                                     // var temp = "<p>" + response[key].title + "</p>";
                                     var temp = `
+                                    
                                     <span class="my-2">
                                         <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].priority}</button>
                                         <button class="px-4 py-1 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">${response[key].due_date}</button>
