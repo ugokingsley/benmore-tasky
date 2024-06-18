@@ -7,8 +7,3 @@ router = DefaultRouter()
 # router.register(r'tasks', TaskManagerViewSet, basename='tasks')
 router.register("tasks", TaskManagerViewSet)
 urlpatterns = router.urls
-
-# # The API URLs are now determined automatically by the router.
-# urlpatterns = [
-#     path('', include(router.urls)),
-# ]
