@@ -175,15 +175,10 @@
 {% block content %}
 <br /><br />
 
-<!-- <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14"> -->
 <div class="container mx-auto">
-    <!-- <div class="grid grid-cols-3 gap-4 mb-4"> -->
     <div class="grid grid-cols-3 gap-1">
-
-        <!-- <div class="col-span-12 sm:col-span-12 md:col-span-3 lg:col-span-3 xl:col-span-3 2xl:col-span-3"> -->
         <div id="in_progress"
             class="flex flex-wrap items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800 ">
-
             <script>
                 $(document).ready(function () {
                     setInterval(function () {
@@ -196,30 +191,34 @@
                                 for (var key in response) {
                                     // var temp = "<p>" + response[key].title + "</p>";
                                     var temp = `
-                                    <div
-                class="my-1 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex justify-end px-4 pt-4">
 
-                </div>
-
-                <div class="flex flex-col items-center pb-10 px-2">
-                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
-                    </h5>
-                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
-                    <div class="flex mt-4 md:mt-6">
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-eye"></i>
-                            </a>&nbsp
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium  text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-trash"></i>
-                            </a>&nbsp
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                    </div>
+                                    <div class="bg-white rounded shadow max-w-md mx-auto px-4 py-2">
+        <header class="p-4">
+            <h3 class="text-lg font-bold">${response[key].title}</h3>
+        </header>
+        <section>
+            <p class="text-sm text-gray-600 p-4">${response[key].description}</p>
+        </section>
+        <footer class="p-4">
+            <a href="#" class="float-right"><i class="fa-solid fa-eye"></i></a>
+            <a href="#" class="float-right mr-3"><i class="fa-solid fa-trash"></i></a>
+            <a href="#" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></a>
+            <div class="flex">
+                <div class="flex justify-end mr-2">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/men/33.jpg" alt="">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/women/32.jpg" alt="">
+                    <span
+                        class="flex items-center justify-center bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-white font-semibold border-2 border-gray-200 dark:border-gray-700 rounded-full h-8 w-8">
+                        +999
+                    </span>
                 </div>
             </div>
-                                    `
+        </footer>
+    </div> `
                                     $("#in_progress").append(temp);
                                 }
                             },
@@ -248,29 +247,33 @@
                                 $("#completed").empty();
                                 for (var key in response) {
                                     var temp = `
-                                    <div
-                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex justify-end px-4 pt-4">
-
-                </div>
-
-                <div class="flex flex-col items-center pb-10">
-                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
-                    </h5>
-                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
-                    <div class="flex mt-4 md:mt-6">
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-eye"></i>
-                            </a>&nbsp
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium  text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-trash"></i>
-                            </a>&nbsp
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                    </div>
+                                    <div class="bg-white rounded shadow max-w-md mx-auto px-4 py-2">
+        <header class="p-4">
+            <h3 class="text-lg font-bold">${response[key].title}</h3>
+        </header>
+        <section>
+            <p class="text-sm text-gray-600 p-4">${response[key].description}</p>
+        </section>
+        <footer class="p-4">
+            <a href="#" class="float-right"><i class="fa-solid fa-eye"></i></a>
+            <a href="#" class="float-right mr-3"><i class="fa-solid fa-trash"></i></a>
+            <a href="#" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></a>
+            <div class="flex">
+                <div class="flex justify-end mr-2">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/men/33.jpg" alt="">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/women/32.jpg" alt="">
+                    <span
+                        class="flex items-center justify-center bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-white font-semibold border-2 border-gray-200 dark:border-gray-700 rounded-full h-8 w-8">
+                        +999
+                    </span>
                 </div>
             </div>
+        </footer>
+    </div>
                                     `
                                     $("#completed").append(temp);
                                 }
@@ -301,29 +304,33 @@
                                 for (var key in response) {
                                     // var temp = "<p>" + response[key].title + "</p>";
                                     var temp = `
-                                    <div
-                class="my-1 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex justify-end px-4 pt-4">
-
-                </div>
-
-                <div class="flex flex-col items-center pb-10 px-2">
-                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">${response[key].title}
-                    </h5>
-                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
-                    <div class="flex mt-4 md:mt-6">
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-eye"></i>
-                            </a>&nbsp
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium  text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-solid fa-trash"></i>
-                            </a>&nbsp
-                        <a href="#"
-                            class="inline-flex items-right px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                    </div>
+                                    <div class="bg-white rounded shadow max-w-md mx-auto px-4 py-2">
+        <header class="p-4">
+            <h3 class="text-lg font-bold">${response[key].title}</h3>
+        </header>
+        <section>
+            <p class="text-sm text-gray-600 p-4">${response[key].description}</p>
+        </section>
+        <footer class="p-4">
+            <a href="#" class="float-right"><i class="fa-solid fa-eye"></i></a>
+            <a href="#" class="float-right mr-3"><i class="fa-solid fa-trash"></i></a>
+            <a href="#" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></a>
+            <div class="flex">
+                <div class="flex justify-end mr-2">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/men/33.jpg" alt="">
+                    <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                        src="https://randomuser.me/api/portraits/women/32.jpg" alt="">
+                    <span
+                        class="flex items-center justify-center bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-white font-semibold border-2 border-gray-200 dark:border-gray-700 rounded-full h-8 w-8">
+                        +999
+                    </span>
                 </div>
             </div>
+        </footer>
+    </div>
                                     `
                                     $("#overdue").append(temp);
                                 }

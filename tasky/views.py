@@ -5,8 +5,6 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.contrib import messages
-# from django.views.generic import DetailView, ListView
-# from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse,reverse_lazy
@@ -20,7 +18,7 @@ from .models import *
 from .serializers import *
 from .forms import *
 
-
+# returns the tasks HTML template
 def index(request):
     all_users = User.objects.all() 
     context = {
@@ -35,7 +33,7 @@ class TaskManagerViewSet(ModelViewSet):
     """
     queryset = TaskManager.objects.all()
     serializer_class = TaskManagerSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=["GET"], detail=False)
     def tasks_overdue(self, request):
