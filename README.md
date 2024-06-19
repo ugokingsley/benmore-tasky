@@ -1,6 +1,7 @@
 
 **Benmore Tasky App**
-<img width="955" alt="image" src="https://github.com/ugokingsley/benmore-tasky/assets/19801981/68b3a3d5-3a38-45a0-af22-2e4e98b16119">
+<img width="959" alt="image" src="https://github.com/ugokingsley/benmore-tasky/assets/19801981/a900f58f-d54f-4106-89c1-8d3506db2eeb">
+
 Project Description
 
 **1. About Project**
