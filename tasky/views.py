@@ -12,7 +12,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
@@ -33,7 +33,7 @@ class TaskManagerViewSet(ModelViewSet):
     """
     queryset = TaskManager.objects.all()
     serializer_class = TaskManagerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @action(methods=["GET"], detail=False)
     def tasks_overdue(self, request):

@@ -180,7 +180,9 @@
     });
 
     // Delete task
-    $("tbody").on("click", "#btn-delete", function () {
+    //$("tbody").on("click", "#btn-delete", function () {
+    $("#btn-delete").click(function (event) {
+        event.preventDefault();
         console.log("Delete button clicked");
         var id = $(this).attr("data-sid");
         var csrftoken = getCookie('csrftoken');;
