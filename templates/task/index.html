@@ -153,35 +153,52 @@
         })
     })
 
-    // Edit task
-    $("tbody").on("click", "#btn-edit", function () {
-        console.log("Edit button clicked");
-        var id = $(this).attr("data-sid");
-        var csrftoken = getCookie('csrftoken');
-        console.log("id: ", id);
-        mydata = { id: id, csrfmiddlewaretoken: csrftoken };
+    // Update Task
+    function editTask(id, title, description, status, priority, due_date, assigned_to) {
+        $("#title").val(title);
+        $("#description").val(description);
+        $("#status").val(status);
+        $("#priority").val(priority);
+        $("#due_date").val(due_date);
+        $("#category").val(category);
+        $("#assigned_to").val(assigned_to);
+    }
 
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var title = $('#title').val();
+        var description = $('#description').val();
+        var status = $('#status').val();
+        var priority = $('#priority').val();
+        var due_date = $('#due_date').val();
+        var category = $('#category').val();
+        var assigned_to = $('#assigned_to').val();
         $.ajax({
-            url: `http://localhost:5000/api/v1/tasks/${id}/`,
-            method: "PUT",
-            data: mydata,
-            success: function (data) {
-                console.log("data: ", data);
-                // Insert student data to form field
-                $("#title").val(data.title);
-                $("#description").val(data.description);
-                $("#status").val(data.status);
-                $("#priority").val(data.priority);
-                $("#due_date").val(data.due_date);
-                $("#category").val(data.category);
-                $("#assigned_to").val(data.assigned_to);
+            url: 'http://localhost:5000/api/v1/tasks/' + id + '/',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                title: title,
+                description: description,
+                status: status,
+                priority: priority,
+                due_date: due_date,
+                category: category,
+                assigned_to: assigned_to,
+                'csrfmiddlewaretoken': getCookie('csrftoken')
+            }),
+            success: function () {
+                alert('Updated Successfully');
             },
+            error: function () {
+                alert('Failed to update task');
+            }
         });
     });
 
+    // Delete Task
     function deleteTask(id) {
         var csrftoken = getCookie('csrftoken');
-        mydata = { id: id, csrfmiddlewaretoken: csrftoken };
         $.ajax({
             url: 'http://localhost:5000/api/v1/tasks/' + id + '/',
             method: 'DELETE',
@@ -250,7 +267,7 @@
         <footer class="p-4" id="tbody">
             <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
             <button onclick="deleteTask('${response[key].id}')" id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
-            <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button onclick="editTask('${response[key].id}','${response[key].title}')" id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
                     <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
