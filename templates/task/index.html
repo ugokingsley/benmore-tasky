@@ -179,29 +179,27 @@
         });
     });
 
-    // Delete task
-    //$("tbody").on("click", "#btn-delete", function () {
-    $("#btn-delete").click(function (event) {
-        event.preventDefault();
-        console.log("Delete button clicked");
-        var id = $(this).attr("data-sid");
-        var csrftoken = getCookie('csrftoken');;
-        console.log("id: ", id);
+    function deleteTask(id) {
+        var csrftoken = getCookie('csrftoken');
         mydata = { id: id, csrfmiddlewaretoken: csrftoken };
-        mythis = this;
-
         $.ajax({
-            url: `http://localhost:5000/api/v1/tasks/${id}/`,
-            method: "DELETE",
-            data: mydata,
-            success: function (data) {
-                console.log('data: ', data);
+            url: 'http://localhost:5000/api/v1/tasks/' + id + '/',
+            method: 'DELETE',
+            data: {
+                'csrfmiddlewaretoken': getCookie('csrftoken'), // Add the CSRF token here
             },
-            error: (error) => {
-                console.log(error);
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            success: function (mydata) {
+                console.log('deleted', mydata);
+            },
+            error: function (error) {
+                alert(error);
             }
         });
-    });
+    }
 
 </script>
 {% endblock modal %}
@@ -251,7 +249,7 @@
         </section>
         <footer class="p-4" id="tbody">
             <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
-            <button id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
+            <button onclick="deleteTask('${response[key].id}')" id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
             <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
@@ -309,7 +307,7 @@
         </section>
         <footer class="p-4" id="tbody">
             <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
-            <button id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
+            <button onclick="deleteTask('${response[key].id}')" id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
             <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
@@ -371,7 +369,7 @@
         </section>
         <footer class="p-4" id="tbody">
             <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
-            <button id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
+            <button onclick="deleteTask('${response[key].id}')" id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
             <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
