@@ -179,13 +179,13 @@
         });
     });
 
-    // Delete data
-    $("tbody").on("click", "btn-delete", function () {
+    // Delete task
+    $("tbody").on("click", "#btn-delete", function () {
         console.log("Delete button clicked");
         var id = $(this).attr("data-sid");
         var csrftoken = getCookie('csrftoken');;
         console.log("id: ", id);
-        mydata = { id: id, csrfmiddlewaretoken: csrf };
+        mydata = { id: id, csrfmiddlewaretoken: csrftoken };
         mythis = this;
 
         $.ajax({
@@ -194,20 +194,10 @@
             data: mydata,
             success: function (data) {
                 console.log('data: ', data);
-                if (data.status == 1) {
-                    //console.log('Data deleted successfully');
-                    $("#msg").text("Data deleted successfully");
-                    $("#msg").show();
-
-                    // Fade out deleted row
-                    $(mythis).closest("tr").fadeOut();
-                }
-                if (data.status == 0) {
-                    //console.log('Unable to delete data');
-                    $("#msg").text("Unable to delete data");
-                    $("#msg").show();
-                }
             },
+            error: (error) => {
+                console.log(error);
+            }
         });
     });
 

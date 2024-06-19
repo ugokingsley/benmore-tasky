@@ -135,5 +135,4 @@ class TaskManagerViewSet(ModelViewSet):
         else:
             serializer = self.get_serializer(instance)
             instance.delete()
-            publish('Task Deleted Successfully', serializer.data) # create a socket stream
             return Response({'message':'Task Deleted'}, status=status.HTTP_204_NO_CONTENT) # return task oject response
