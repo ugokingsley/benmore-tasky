@@ -115,15 +115,12 @@
         return cookieValue;
     }
 
+    // post task
     var form = document.getElementById('form-wrapper')
     form.addEventListener('submit', function (e) {
         e.preventDefault()
         console.log('Form submitted')
         var url = 'http://localhost:5000/api/v1/tasks/'
-        // if (activeItem != null){
-        // 	var url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}/`
-        // 	activeItem = null
-        // }
 
         var csrftoken = getCookie('csrftoken');
 
@@ -147,7 +144,7 @@
                 'priority': priority,
                 'due_date': due_date,
                 'category': category,
-                'assigned_to': 1
+                'assigned_to': assigned_to
             })
         }
         ).then(function (response) {
@@ -156,9 +153,35 @@
         })
     })
 
+    // Edit task
+    $("tbody").on("click", "#btn-edit", function () {
+        console.log("Edit button clicked");
+        let id = $(this).attr("data-sid");
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+        console.log("id: ", id);
+        mydata = { student_id: id, csrfmiddlewaretoken: csrf };
+
+        $.ajax({
+            url: "http://localhost:5000/api/v1/tasks/${id}/",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                console.log("data: ", data);
+                // Insert student data to form field
+                $("#title").val(data.title);
+                $("#description").val(data.description);
+                $("#status").val(data.status);
+                $("#priority").val(data.priority);
+                $("#due_date").val(data.due_date);
+                $("#category").val(data.category);
+                $("#assigned_to").val(data.assigned_to);
+            },
+        });
+    });
+
     function deleteItem(item) {
         console.log('Delete clicked')
-        fetch(`http://localhost:5000/api/v1/tasks/${item.id}/`, {
+        fetch(`http://localhost:5000/api/v1/tasks/${id}/`, {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json',
@@ -215,10 +238,10 @@
         <section>
             <p class="text-sm text-gray-600 p-4">${response[key].description}</p>
         </section>
-        <footer class="p-4">
-            <a href="#" class="float-right"><i class="fa-solid fa-eye"></i></a>
-            <a href="#" class="float-right mr-3"><i class="fa-solid fa-trash"></i></a>
-            <a href="#" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></a>
+        <footer class="p-4" id="tbody">
+            <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
+            <button id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
+            <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
                     <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
@@ -273,10 +296,10 @@
         <section>
             <p class="text-sm text-gray-600 p-4">${response[key].description}</p>
         </section>
-        <footer class="p-4">
-            <a href="#" class="float-right"><i class="fa-solid fa-eye"></i></a>
-            <a href="#" class="float-right mr-3"><i class="fa-solid fa-trash"></i></a>
-            <a href="#" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></a>
+        <footer class="p-4" id="tbody">
+            <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
+            <button id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
+            <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
                     <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
@@ -335,10 +358,10 @@
         <section>
             <p class="text-sm text-gray-600 p-4">${response[key].description}</p>
         </section>
-        <footer class="p-4">
-            <a href="#" class="float-right"><i class="fa-solid fa-eye"></i></a>
-            <a href="#" class="float-right mr-3"><i class="fa-solid fa-trash"></i></a>
-            <a href="#" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></a>
+        <footer class="p-4" id="tbody">
+            <button id="btn-view" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-eye"></i></button>
+            <button id="btn-delete" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-solid fa-trash"></i></button>
+            <button id="btn-edit" data-sid="${response[key].id}" class="float-right mr-3"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="flex">
                 <div class="flex justify-end mr-2">
                     <img class="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
