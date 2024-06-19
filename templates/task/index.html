@@ -156,10 +156,10 @@
     // Edit task
     $("tbody").on("click", "#btn-edit", function () {
         console.log("Edit button clicked");
-        let id = $(this).attr("data-sid");
-        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+        var id = $(this).attr("data-sid");
+        var csrftoken = getCookie('csrftoken');
         console.log("id: ", id);
-        mydata = { id: id, csrfmiddlewaretoken: csrf };
+        mydata = { id: id, csrfmiddlewaretoken: csrftoken };
 
         $.ajax({
             url: `http://localhost:5000/api/v1/tasks/${id}/`,
@@ -182,8 +182,8 @@
     // Delete data
     $("tbody").on("click", "btn-delete", function () {
         console.log("Delete button clicked");
-        let id = $(this).attr("data-sid");
-        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+        var id = $(this).attr("data-sid");
+        var csrftoken = getCookie('csrftoken');;
         console.log("id: ", id);
         mydata = { id: id, csrfmiddlewaretoken: csrf };
         mythis = this;
