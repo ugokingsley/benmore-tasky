@@ -159,11 +159,11 @@
         let id = $(this).attr("data-sid");
         let csrf = $("input[name=csrfmiddlewaretoken]").val();
         console.log("id: ", id);
-        mydata = { student_id: id, csrfmiddlewaretoken: csrf };
+        mydata = { id: id, csrfmiddlewaretoken: csrf };
 
         $.ajax({
-            url: "http://localhost:5000/api/v1/tasks/${id}/",
-            method: "POST",
+            url: `http://localhost:5000/api/v1/tasks/${id}/`,
+            method: "PUT",
             data: mydata,
             success: function (data) {
                 console.log("data: ", data);
@@ -179,18 +179,37 @@
         });
     });
 
-    function deleteItem(item) {
-        console.log('Delete clicked')
-        fetch(`http://localhost:5000/api/v1/tasks/${id}/`, {
-            method: 'DELETE',
-            headers: {
-                'Content-type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            }
-        }).then((response) => {
-            buildList()
-        })
-    }
+    // Delete data
+    $("tbody").on("click", "btn-delete", function () {
+        console.log("Delete button clicked");
+        let id = $(this).attr("data-sid");
+        let csrf = $("input[name=csrfmiddlewaretoken]").val();
+        console.log("id: ", id);
+        mydata = { id: id, csrfmiddlewaretoken: csrf };
+        mythis = this;
+
+        $.ajax({
+            url: `http://localhost:5000/api/v1/tasks/${id}/`,
+            method: "DELETE",
+            data: mydata,
+            success: function (data) {
+                console.log('data: ', data);
+                if (data.status == 1) {
+                    //console.log('Data deleted successfully');
+                    $("#msg").text("Data deleted successfully");
+                    $("#msg").show();
+
+                    // Fade out deleted row
+                    $(mythis).closest("tr").fadeOut();
+                }
+                if (data.status == 0) {
+                    //console.log('Unable to delete data');
+                    $("#msg").text("Unable to delete data");
+                    $("#msg").show();
+                }
+            },
+        });
+    });
 
 </script>
 {% endblock modal %}
